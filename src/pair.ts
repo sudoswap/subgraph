@@ -42,39 +42,55 @@ export function handleSpotPriceUpdate(event: SpotPriceUpdate): void {
 }
 
 export function handleTokenDeposit(event: TokenDeposit): void {
-    handleEthBalanceUpdate(event)
+    let pair = Pair.load(event.address.toHex())
+    if (pair!.token === null) {
+        // ETH pair
+        handleEthBalanceUpdate(event)
+    }
 }
 
 export function handleTokenWithdrawal(event: TokenWithdrawal): void {
-    handleEthBalanceUpdate(event)
+    let pair = Pair.load(event.address.toHex())
+    if (pair!.token === null) {
+        // ETH pair
+        handleEthBalanceUpdate(event)
+    }
 }
 
 export function handleSwapNFTInPair(event: SwapNFTInPair): void {
-    let ethChange = handleEthBalanceUpdate(event)
-    // Note: we must load pair and collection after the handleEthBalanceUpdate call
-    // since we make changes to those entities in the call
-
     let pair = Pair.load(event.address.toHex())
-    pair!.ethVolume = pair!.ethVolume.plus(ethChange.abs())
-    pair!.save()
+    if (pair!.token === null) {
+        // ETH pair
+        let ethChange = handleEthBalanceUpdate(event)
+        // Note: we must load pair and collection after the handleEthBalanceUpdate call
+        // since we make changes to those entities in the call
 
-    let collection = Collection.load(pair!.collection)
-    collection!.ethVolume = collection!.ethVolume.plus(ethChange.abs())
-    collection!.save()
+        pair = Pair.load(event.address.toHex())
+        pair!.ethVolume = pair!.ethVolume.plus(ethChange.abs())
+        pair!.save()
+
+        let collection = Collection.load(pair!.collection)
+        collection!.ethVolume = collection!.ethVolume.plus(ethChange.abs())
+        collection!.save()
+    }
 }
 
 export function handleSwapNFTOutPair(event: SwapNFTOutPair): void {
-    let ethChange = handleEthBalanceUpdate(event)
-    // Note: we must load pair and collection after the handleEthBalanceUpdate call
-    // since we make changes to those entities in the call
-
     let pair = Pair.load(event.address.toHex())
-    pair!.ethVolume = pair!.ethVolume.plus(ethChange.abs())
-    pair!.save()
+    if (pair!.token === null) {
+        // ETH pair
+        let ethChange = handleEthBalanceUpdate(event)
+        // Note: we must load pair and collection after the handleEthBalanceUpdate call
+        // since we make changes to those entities in the call
 
-    let collection = Collection.load(pair!.collection)
-    collection!.ethVolume = collection!.ethVolume.plus(ethChange.abs())
-    collection!.save()
+        pair = Pair.load(event.address.toHex())
+        pair!.ethVolume = pair!.ethVolume.plus(ethChange.abs())
+        pair!.save()
+
+        let collection = Collection.load(pair!.collection)
+        collection!.ethVolume = collection!.ethVolume.plus(ethChange.abs())
+        collection!.save()
+    }
 }
 
 function handleEthBalanceUpdate(event: ethereum.Event): BigInt {

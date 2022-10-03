@@ -1,6 +1,11 @@
 specVersion: 0.0.4
 schema:
   file: ./schema.graphql
+features:
+  - grafting
+graft:
+  base: QmNTahh3ercjg3LwDRSU6gAY2aUYtYdKbPUDXTVhmLz6or # Subgraph ID of base subgraph
+  block: 15669779 # Block number
 dataSources:
   - kind: ethereum
     name: LSSVMFactory
@@ -22,9 +27,13 @@ dataSources:
           file: ./abis/LSSVMFactory.json
         - name: LSSVMPair
           file: ./abis/LSSVMPair.json
+        - name: ERC20
+          file: ./abis/ERC20.json
       callHandlers:
         - function: createPairETH(address,address,address,uint8,uint128,uint96,uint128,uint256[])
-          handler: handleNewPair
+          handler: handleNewETHPair
+        - function: createPairERC20((address,address,address,address,uint8,uint128,uint96,uint128,uint256[],uint256))
+          handler: handleNewERC20Pair
       file: ./src/factory.ts
 templates:
   - kind: ethereum

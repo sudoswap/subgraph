@@ -2,6 +2,8 @@ type Pair @entity {
   id: ID!
   owner: PairOwner!
   collection: Collection!
+  "the ERC20 token, or null if it's an ETH pair"
+  token: Token
   "poolType of the LSSVMPair (TOKEN, NFT, or TRADE)"
   type: BigInt!
   assetRecipient: String!
@@ -26,4 +28,12 @@ type Collection @entity {
   pairs: [Pair!]! @derivedFrom(field: "collection")
   ethOfferTVL: BigInt!
   ethVolume: BigInt!
+}
+
+type Token @entity {
+  id: ID!
+  pairs: [Pair!]! @derivedFrom(field: "token")
+  name: String!
+  symbol: String!
+  decimals: BigInt!
 }
