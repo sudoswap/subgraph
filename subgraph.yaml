@@ -5,7 +5,7 @@ features:
   - grafting
 graft:
   base: QmNTahh3ercjg3LwDRSU6gAY2aUYtYdKbPUDXTVhmLz6or # Subgraph ID of base subgraph
-  block: 15669779 # Block number
+  block: 15719272 # Block number
 dataSources:
   - kind: ethereum
     name: LSSVMFactory
@@ -54,6 +54,8 @@ templates:
           file: ./abis/LSSVMPair.json
         - name: Multicall3
           file: ./abis/Multicall3.json
+        - name: ERC20
+          file: ./abis/ERC20.json
       eventHandlers:
         - event: OwnershipTransferred(indexed address)
           handler: handleOwnershipTransferred

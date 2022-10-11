@@ -82,6 +82,8 @@ export function handleNewERC20Pair(call: CreatePairERC20Call): void {
   pair.numNfts = BigInt.fromI32(call.inputs.params.initialNFTIDs.length)
   pair.ethBalance = BigInt.zero()
   pair.ethVolume = BigInt.zero()
+  pair.tokenBalance = BigInt.zero()
+  pair.tokenVolume = BigInt.zero()
 
   let token = Token.load(call.inputs.params.token.toHex())
   if (token === null) {

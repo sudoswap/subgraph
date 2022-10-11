@@ -1,6 +1,7 @@
 import { AssetRecipientChange, DeltaUpdate, FeeUpdate, OwnershipTransferred, SpotPriceUpdate, SwapNFTInPair, SwapNFTOutPair, TokenDeposit, TokenWithdrawal } from "../generated/templates/LSSVMPair/LSSVMPair"
 import { Collection, Pair, PairOwner } from "../generated/schema"
 import { Multicall3 } from "../generated/templates/LSSVMPair/Multicall3"
+import { ERC20 } from "../generated/templates/LSSVMPair/ERC20"
 import { Address, BigInt, ethereum } from "@graphprotocol/graph-ts"
 
 export function handleOwnershipTransferred(event: OwnershipTransferred): void {
@@ -46,6 +47,10 @@ export function handleTokenDeposit(event: TokenDeposit): void {
     if (pair!.token === null) {
         // ETH pair
         handleEthBalanceUpdate(event)
+    } else {
+        // ERC20 pair
+        pair!.tokenBalance = pair!.tokenBalance!.plus(event.params.amount)
+        pair!.save()
     }
 }
 
@@ -54,6 +59,10 @@ export function handleTokenWithdrawal(event: TokenWithdrawal): void {
     if (pair!.token === null) {
         // ETH pair
         handleEthBalanceUpdate(event)
+    } else {
+        // ERC20 pair
+        pair!.tokenBalance = pair!.tokenBalance!.minus(event.params.amount)
+        pair!.save()
     }
 }
 
@@ -72,6 +81,14 @@ export function handleSwapNFTInPair(event: SwapNFTInPair): void {
         let collection = Collection.load(pair!.collection)
         collection!.ethVolume = collection!.ethVolume.plus(ethChange.abs())
         collection!.save()
+    } else {
+        // ERC20 pair
+        let tokenContract = ERC20.bind(Address.fromString(pair!.token!))
+        let tokenBalanceResult = tokenContract.try_balanceOf(event.address)
+        let tokenChange = tokenBalanceResult.reverted ? BigInt.zero() : tokenBalanceResult.value.minus(pair!.tokenBalance!)
+        pair!.tokenBalance = pair!.tokenBalance!.plus(tokenChange)
+        pair!.tokenVolume = pair!.tokenVolume!.plus(tokenChange.abs())
+        pair!.save()
     }
 }
 
@@ -90,6 +107,14 @@ export function handleSwapNFTOutPair(event: SwapNFTOutPair): void {
         let collection = Collection.load(pair!.collection)
         collection!.ethVolume = collection!.ethVolume.plus(ethChange.abs())
         collection!.save()
+    } else {
+        // ERC20 pair
+        let tokenContract = ERC20.bind(Address.fromString(pair!.token!))
+        let tokenBalanceResult = tokenContract.try_balanceOf(event.address)
+        let tokenChange = tokenBalanceResult.reverted ? BigInt.zero() : tokenBalanceResult.value.minus(pair!.tokenBalance!)
+        pair!.tokenBalance = pair!.tokenBalance!.plus(tokenChange)
+        pair!.tokenVolume = pair!.tokenVolume!.plus(tokenChange.abs())
+        pair!.save()
     }
 }
 
