@@ -1,11 +1,6 @@
 specVersion: 0.0.4
 schema:
   file: ./schema.graphql
-features:
-  - grafting
-graft:
-  base: QmNTahh3ercjg3LwDRSU6gAY2aUYtYdKbPUDXTVhmLz6or # Subgraph ID of base subgraph
-  block: 15719272 # Block number
 dataSources:
   - kind: ethereum
     name: LSSVMFactory

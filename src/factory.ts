@@ -82,13 +82,12 @@ export function handleNewERC20Pair(call: CreatePairERC20Call): void {
   pair.numNfts = BigInt.fromI32(call.inputs.params.initialNFTIDs.length)
   pair.ethBalance = BigInt.zero()
   pair.ethVolume = BigInt.zero()
-  pair.tokenBalance = BigInt.zero()
   pair.tokenVolume = BigInt.zero()
 
+  let tokenContract = ERC20.bind(call.inputs.params.token)
   let token = Token.load(call.inputs.params.token.toHex())
   if (token === null) {
     token = new Token(call.inputs.params.token.toHex())
-    let tokenContract = ERC20.bind(call.inputs.params.token)
     let nameResult = tokenContract.try_name()
     token.name = nameResult.reverted ? "" : nameResult.value
     let symbolResult = tokenContract.try_symbol()
@@ -98,6 +97,8 @@ export function handleNewERC20Pair(call: CreatePairERC20Call): void {
     token.save()
   }
   pair.token = token.id
+  let balanceResult = tokenContract.try_balanceOf(call.inputs.params.token)
+  pair.tokenBalance = balanceResult.reverted ? BigInt.zero() : balanceResult.value
 
   pair.save()
   pairOwner.save()
