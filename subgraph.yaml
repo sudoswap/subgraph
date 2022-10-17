@@ -70,6 +70,11 @@ templates:
           handler: handleSwapNFTInPair
         - event: SwapNFTOutPair()
           handler: handleSwapNFTOutPair
+      callHandlers:
+        - function: swapTokenForSpecificNFTs(uint256[],uint256,address,bool,address)
+          handler: handleSwapTokenForSpecificNFTs
+        - function: swapNFTsForToken(uint256[],uint256,address payable,bool,address)
+          handler: handleSwapNFTsForToken
       file: ./src/pair.ts
   - kind: ethereum
     name: ERC721

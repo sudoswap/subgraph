@@ -40,6 +40,8 @@ export function handleNewETHPair(call: CreatePairETHCall): void {
   pair.ethBalance = BigInt.zero()
   pair.ethVolume = BigInt.zero()
 
+  pair.swapNonce = BigInt.zero()
+
   pair.save()
   pairOwner.save()
   collection.save()
@@ -99,6 +101,8 @@ export function handleNewERC20Pair(call: CreatePairERC20Call): void {
   pair.token = token.id
   let balanceResult = tokenContract.try_balanceOf(call.inputs.params.token)
   pair.tokenBalance = balanceResult.reverted ? BigInt.zero() : balanceResult.value
+
+  pair.swapNonce = BigInt.zero()
 
   pair.save()
   pairOwner.save()

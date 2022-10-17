@@ -1,5 +1,5 @@
-import { AssetRecipientChange, DeltaUpdate, FeeUpdate, OwnershipTransferred, SpotPriceUpdate, SwapNFTInPair, SwapNFTOutPair, TokenDeposit, TokenWithdrawal } from "../generated/templates/LSSVMPair/LSSVMPair"
-import { Collection, Pair, PairOwner } from "../generated/schema"
+import { AssetRecipientChange, DeltaUpdate, FeeUpdate, OwnershipTransferred, SpotPriceUpdate, SwapNFTInPair, SwapNFTOutPair, SwapNFTsForTokenCall, SwapTokenForSpecificNFTsCall, TokenDeposit, TokenWithdrawal } from "../generated/templates/LSSVMPair/LSSVMPair"
+import { Collection, Pair, PairOwner, Swap } from "../generated/schema"
 import { Multicall3 } from "../generated/templates/LSSVMPair/Multicall3"
 import { ERC20 } from "../generated/templates/LSSVMPair/ERC20"
 import { Address, BigInt, ethereum } from "@graphprotocol/graph-ts"
@@ -116,6 +116,40 @@ export function handleSwapNFTOutPair(event: SwapNFTOutPair): void {
         pair!.tokenVolume = pair!.tokenVolume!.plus(tokenChange.abs())
         pair!.save()
     }
+}
+
+export function handleSwapTokenForSpecificNFTs(call: SwapTokenForSpecificNFTsCall): void {
+    let pair = Pair.load(call.to.toHex())!
+
+    let swap = new Swap(pair.id + "-" + pair.swapNonce.toString())
+    swap.pair = pair.id
+    swap.swapNonce = pair.swapNonce
+    swap.timestamp = call.block.timestamp
+    swap.transactionHash = call.transaction.hash.toHex()
+    swap.isTokenToNFT = true
+    swap.tokenAmount = call.outputs.inputAmount
+    swap.nftIds = call.inputs.nftIds
+    swap.save()
+
+    pair.swapNonce = pair.swapNonce.plus(BigInt.fromI32(1))
+    pair.save()
+}
+
+export function handleSwapNFTsForToken(call: SwapNFTsForTokenCall): void {
+    let pair = Pair.load(call.to.toHex())!
+
+    let swap = new Swap(pair.id + "-" + pair.swapNonce.toString())
+    swap.pair = pair.id
+    swap.swapNonce = pair.swapNonce
+    swap.timestamp = call.block.timestamp
+    swap.transactionHash = call.transaction.hash.toHex()
+    swap.isTokenToNFT = false
+    swap.tokenAmount = call.outputs.outputAmount
+    swap.nftIds = call.inputs.nftIds
+    swap.save()
+
+    pair.swapNonce = pair.swapNonce.plus(BigInt.fromI32(1))
+    pair.save()
 }
 
 function handleEthBalanceUpdate(event: ethereum.Event): BigInt {

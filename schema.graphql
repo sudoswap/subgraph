@@ -18,6 +18,8 @@ type Pair @entity {
   ethVolume: BigInt!
   tokenBalance: BigInt
   tokenVolume: BigInt
+  swapNonce: BigInt!
+  swaps: [Swap!]! @derivedFrom(field: "pair")
 }
 
 type PairOwner @entity {
@@ -38,4 +40,15 @@ type Token @entity {
   name: String!
   symbol: String!
   decimals: BigInt!
+}
+
+type Swap @entity {
+  id: ID!
+  pair: Pair!
+  swapNonce: BigInt!
+  timestamp: BigInt!
+  transactionHash: String!
+  isTokenToNFT: Boolean!
+  tokenAmount: BigInt!
+  nftIds: [BigInt!]!
 }
