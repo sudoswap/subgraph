@@ -99,7 +99,7 @@ export function handleNewERC20Pair(call: CreatePairERC20Call): void {
     token.save()
   }
   pair.token = token.id
-  let balanceResult = tokenContract.try_balanceOf(call.inputs.params.token)
+  let balanceResult = tokenContract.try_balanceOf(call.outputs.pair)
   pair.tokenBalance = balanceResult.reverted ? BigInt.zero() : balanceResult.value
 
   pair.swapNonce = BigInt.zero()
