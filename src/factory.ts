@@ -38,8 +38,8 @@ export function handleNewERC721ETHPair(call: CreatePairERC721ETHCall): void {
   initialNFTIDs.sort()
   pair.nftIds = initialNFTIDs
   pair.numNfts = BigInt.fromI32(call.inputs._initialNFTIDs.length)
-  pair.ethBalance = BigInt.zero()
-  pair.ethVolume = BigInt.zero()
+  pair.tokenBalance = BigInt.zero()
+  pair.tokenVolume = BigInt.zero()
 
   pair.swapNonce = BigInt.zero()
 
@@ -84,8 +84,7 @@ export function handleNewERC721ERC20Pair(call: CreatePairERC721ERC20Call): void 
   initialNFTIDs.sort()
   pair.nftIds = initialNFTIDs
   pair.numNfts = BigInt.fromI32(call.inputs.params.initialNFTIDs.length)
-  pair.ethBalance = BigInt.zero()
-  pair.ethVolume = BigInt.zero()
+  pair.tokenBalance = BigInt.zero()
   pair.tokenVolume = BigInt.zero()
 
   let tokenContract = ERC20.bind(call.inputs.params.token)

@@ -46,7 +46,7 @@ export function handleTokenDeposit(event: TokenDeposit): void {
     let pair = Pair.load(event.address.toHex())
     if (pair!.token === null) {
         // ETH pair
-        pair!.ethBalance = pair!.ethBalance.plus(event.params.amount)
+        pair!.tokenBalance = pair!.tokenBalance.plus(event.params.amount)
         pair!.save()
         
         if (shouldCountPairOfferTVL(pair!)) {
@@ -56,7 +56,7 @@ export function handleTokenDeposit(event: TokenDeposit): void {
         }
     } else {
         // ERC20 pair
-        pair!.tokenBalance = pair!.tokenBalance!.plus(event.params.amount)
+        pair!.tokenBalance = pair!.tokenBalance.plus(event.params.amount)
         pair!.save()
     }
 }
@@ -65,7 +65,7 @@ export function handleTokenWithdrawal(event: TokenWithdrawal): void {
     let pair = Pair.load(event.address.toHex())
     if (pair!.token === null) {
         // ETH pair
-        pair!.ethBalance = pair!.ethBalance.minus(event.params.amount)
+        pair!.tokenBalance = pair!.tokenBalance.minus(event.params.amount)
         pair!.save()
         
         if (shouldCountPairOfferTVL(pair!)) {
@@ -75,7 +75,7 @@ export function handleTokenWithdrawal(event: TokenWithdrawal): void {
         }
     } else {
         // ERC20 pair
-        pair!.tokenBalance = pair!.tokenBalance!.minus(event.params.amount)
+        pair!.tokenBalance = pair!.tokenBalance.minus(event.params.amount)
         pair!.save()
     }
 }
@@ -84,8 +84,8 @@ export function handleSwapNFTInPair(event: SwapNFTInPair): void {
     let pair = Pair.load(event.address.toHex())
     if (pair!.token === null) {
         // ETH pair
-        pair!.ethBalance = pair!.ethBalance.plus(event.params.amountIn)
-        pair!.ethVolume = pair!.ethVolume.plus(event.params.amountIn)
+        pair!.tokenBalance = pair!.tokenBalance.plus(event.params.amountIn)
+        pair!.tokenVolume = pair!.tokenVolume.plus(event.params.amountIn)
         pair!.save()
 
         let collection = Collection.load(pair!.collection)
@@ -93,8 +93,8 @@ export function handleSwapNFTInPair(event: SwapNFTInPair): void {
         collection!.save()
     } else {
         // ERC20 pair
-        pair!.tokenBalance = pair!.tokenBalance!.plus(event.params.amountIn)
-        pair!.tokenVolume = pair!.tokenVolume!.plus(event.params.amountIn)
+        pair!.tokenBalance = pair!.tokenBalance.plus(event.params.amountIn)
+        pair!.tokenVolume = pair!.tokenVolume.plus(event.params.amountIn)
         pair!.save()
     }
 }
@@ -103,8 +103,8 @@ export function handleSwapNFTOutPair(event: SwapNFTOutPair): void {
     let pair = Pair.load(event.address.toHex())
     if (pair!.token === null) {
         // ETH pair
-        pair!.ethBalance = pair!.ethBalance.minus(event.params.amountOut)
-        pair!.ethVolume = pair!.ethVolume.minus(event.params.amountOut)
+        pair!.tokenBalance = pair!.tokenBalance.minus(event.params.amountOut)
+        pair!.tokenVolume = pair!.tokenVolume.minus(event.params.amountOut)
         pair!.save()
 
         let collection = Collection.load(pair!.collection)
@@ -112,8 +112,8 @@ export function handleSwapNFTOutPair(event: SwapNFTOutPair): void {
         collection!.save()
     } else {
         // ERC20 pair
-        pair!.tokenBalance = pair!.tokenBalance!.minus(event.params.amountOut)
-        pair!.tokenVolume = pair!.tokenVolume!.plus(event.params.amountOut)
+        pair!.tokenBalance = pair!.tokenBalance.minus(event.params.amountOut)
+        pair!.tokenVolume = pair!.tokenVolume.plus(event.params.amountOut)
         pair!.save()
     }
 }

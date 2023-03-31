@@ -15,10 +15,8 @@ type Pair @entity {
   "nftIds is sorted in ascending order with unique elements (unless the NFT is malformed)"
   nftIds: [BigInt!]!
   numNfts: BigInt!
-  ethBalance: BigInt!
-  ethVolume: BigInt!
-  tokenBalance: BigInt
-  tokenVolume: BigInt
+  tokenBalance: BigInt!
+  tokenVolume: BigInt!
   swapNonce: BigInt!
   swaps: [Swap!]! @derivedFrom(field: "pair")
 }
