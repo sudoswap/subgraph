@@ -1,8 +1,6 @@
 import { AssetRecipientChange, DeltaUpdate, FeeUpdate, OwnershipTransferred, SpotPriceUpdate, SwapNFTInPair, SwapNFTOutPair, SwapNFTsForTokenCall, SwapTokenForSpecificNFTsCall, TokenDeposit, TokenWithdrawal } from "../generated/templates/LSSVMPair/LSSVMPair"
 import { Collection, Pair, PairOwner, Swap } from "../generated/schema"
-import { Multicall3 } from "../generated/templates/LSSVMPair/Multicall3"
-import { ERC20 } from "../generated/templates/LSSVMPair/ERC20"
-import { Address, BigInt, ethereum } from "@graphprotocol/graph-ts"
+import { BigInt } from "@graphprotocol/graph-ts"
 
 export function handleOwnershipTransferred(event: OwnershipTransferred): void {
     let pair = Pair.load(event.address.toHex())

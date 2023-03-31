@@ -47,8 +47,6 @@ templates:
       abis:
         - name: LSSVMPair
           file: ./abis/LSSVMPair.json
-        - name: Multicall3
-          file: ./abis/Multicall3.json
         - name: ERC20
           file: ./abis/ERC20.json
       eventHandlers:
