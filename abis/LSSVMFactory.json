@@ -2,23 +2,23 @@
   {
     "inputs": [
       {
-        "internalType": "contract LSSVMPairEnumerableETH",
-        "name": "_enumerableETHTemplate",
+        "internalType": "contract LSSVMPairERC721ETH",
+        "name": "_erc721ETHTemplate",
         "type": "address"
       },
       {
-        "internalType": "contract LSSVMPairMissingEnumerableETH",
-        "name": "_missingEnumerableETHTemplate",
+        "internalType": "contract LSSVMPairERC721ERC20",
+        "name": "_erc721ERC20Template",
         "type": "address"
       },
       {
-        "internalType": "contract LSSVMPairEnumerableERC20",
-        "name": "_enumerableERC20Template",
+        "internalType": "contract LSSVMPairERC1155ETH",
+        "name": "_erc1155ETHTemplate",
         "type": "address"
       },
       {
-        "internalType": "contract LSSVMPairMissingEnumerableERC20",
-        "name": "_missingEnumerableERC20Template",
+        "internalType": "contract LSSVMPairERC1155ERC20",
+        "name": "_erc1155ERC20Template",
         "type": "address"
       },
       {
@@ -30,16 +30,66 @@
         "internalType": "uint256",
         "name": "_protocolFeeMultiplier",
         "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_owner",
+        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
     "type": "constructor"
   },
   {
+    "inputs": [],
+    "name": "LSSVMPairFactory__BondingCurveNotWhitelisted",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "LSSVMPairFactory__CannotCallRouter",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "LSSVMPairFactory__FeeTooLarge",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "LSSVMPairFactory__InvalidPair",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "LSSVMPairFactory__ReentrantCall",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "LSSVMPairFactory__SettingsNotEnabledForCollection",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "LSSVMPairFactory__SettingsNotEnabledForPair",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "LSSVMPairFactory__UnauthorizedCaller",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "LSSVMPairFactory__ZeroAddress",
+    "type": "error"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "contract ICurve",
         "name": "bondingCurve",
         "type": "address"
@@ -58,7 +108,7 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "target",
         "type": "address"
@@ -77,10 +127,60 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "poolAddress",
         "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "ERC1155Deposit",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "poolAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "ERC20Deposit",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "poolAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256[]",
+        "name": "ids",
+        "type": "uint256[]"
       }
     ],
     "name": "NFTDeposit",
@@ -90,13 +190,13 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "poolAddress",
         "type": "address"
       }
     ],
-    "name": "NewPair",
+    "name": "NewERC1155Pair",
     "type": "event"
   },
   {
@@ -105,7 +205,20 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "previousOwner",
+        "name": "poolAddress",
+        "type": "address"
+      }
+    ],
+    "name": "NewERC721Pair",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "user",
         "type": "address"
       },
       {
@@ -135,7 +248,7 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "recipientAddress",
         "type": "address"
@@ -148,7 +261,7 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "contract LSSVMRouter",
         "name": "router",
         "type": "address"
@@ -164,31 +277,64 @@
     "type": "event"
   },
   {
-    "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
         "internalType": "address",
-        "name": "poolAddress",
+        "name": "tokenAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "proposedAuthAddress",
         "type": "address"
       }
     ],
-    "name": "TokenDeposit",
-    "type": "event"
-  },
-  {
-    "inputs": [
-      { "internalType": "contract ICurve", "name": "", "type": "address" }
+    "name": "authAllowedForToken",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
     ],
-    "name": "bondingCurveAllowed",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "inputs": [
+      {
+        "internalType": "contract ICurve",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "bondingCurveAllowed",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "name": "callAllowed",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -216,6 +362,148 @@
     "name": "changeProtocolFeeRecipient",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "closeLock",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "contract ERC20",
+            "name": "token",
+            "type": "address"
+          },
+          {
+            "internalType": "contract IERC1155",
+            "name": "nft",
+            "type": "address"
+          },
+          {
+            "internalType": "contract ICurve",
+            "name": "bondingCurve",
+            "type": "address"
+          },
+          {
+            "internalType": "address payable",
+            "name": "assetRecipient",
+            "type": "address"
+          },
+          {
+            "internalType": "enum LSSVMPair.PoolType",
+            "name": "poolType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint128",
+            "name": "delta",
+            "type": "uint128"
+          },
+          {
+            "internalType": "uint96",
+            "name": "fee",
+            "type": "uint96"
+          },
+          {
+            "internalType": "uint128",
+            "name": "spotPrice",
+            "type": "uint128"
+          },
+          {
+            "internalType": "uint256",
+            "name": "nftId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "initialNFTBalance",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "initialTokenBalance",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct LSSVMPairFactory.CreateERC1155ERC20PairParams",
+        "name": "params",
+        "type": "tuple"
+      }
+    ],
+    "name": "createPairERC1155ERC20",
+    "outputs": [
+      {
+        "internalType": "contract LSSVMPairERC1155ERC20",
+        "name": "pair",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract IERC1155",
+        "name": "_nft",
+        "type": "address"
+      },
+      {
+        "internalType": "contract ICurve",
+        "name": "_bondingCurve",
+        "type": "address"
+      },
+      {
+        "internalType": "address payable",
+        "name": "_assetRecipient",
+        "type": "address"
+      },
+      {
+        "internalType": "enum LSSVMPair.PoolType",
+        "name": "_poolType",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint128",
+        "name": "_delta",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint96",
+        "name": "_fee",
+        "type": "uint96"
+      },
+      {
+        "internalType": "uint128",
+        "name": "_spotPrice",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_nftId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_initialNFTBalance",
+        "type": "uint256"
+      }
+    ],
+    "name": "createPairERC1155ETH",
+    "outputs": [
+      {
+        "internalType": "contract LSSVMPairERC1155ETH",
+        "name": "pair",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -247,9 +535,26 @@
             "name": "poolType",
             "type": "uint8"
           },
-          { "internalType": "uint128", "name": "delta", "type": "uint128" },
-          { "internalType": "uint96", "name": "fee", "type": "uint96" },
-          { "internalType": "uint128", "name": "spotPrice", "type": "uint128" },
+          {
+            "internalType": "uint128",
+            "name": "delta",
+            "type": "uint128"
+          },
+          {
+            "internalType": "uint96",
+            "name": "fee",
+            "type": "uint96"
+          },
+          {
+            "internalType": "uint128",
+            "name": "spotPrice",
+            "type": "uint128"
+          },
+          {
+            "internalType": "address",
+            "name": "propertyChecker",
+            "type": "address"
+          },
           {
             "internalType": "uint256[]",
             "name": "initialNFTIDs",
@@ -261,15 +566,15 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct LSSVMPairFactory.CreateERC20PairParams",
+        "internalType": "struct LSSVMPairFactory.CreateERC721ERC20PairParams",
         "name": "params",
         "type": "tuple"
       }
     ],
-    "name": "createPairERC20",
+    "name": "createPairERC721ERC20",
     "outputs": [
       {
-        "internalType": "contract LSSVMPairERC20",
+        "internalType": "contract LSSVMPairERC721ERC20",
         "name": "pair",
         "type": "address"
       }
@@ -279,7 +584,11 @@
   },
   {
     "inputs": [
-      { "internalType": "contract IERC721", "name": "_nft", "type": "address" },
+      {
+        "internalType": "contract IERC721",
+        "name": "_nft",
+        "type": "address"
+      },
       {
         "internalType": "contract ICurve",
         "name": "_bondingCurve",
@@ -295,19 +604,36 @@
         "name": "_poolType",
         "type": "uint8"
       },
-      { "internalType": "uint128", "name": "_delta", "type": "uint128" },
-      { "internalType": "uint96", "name": "_fee", "type": "uint96" },
-      { "internalType": "uint128", "name": "_spotPrice", "type": "uint128" },
+      {
+        "internalType": "uint128",
+        "name": "_delta",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint96",
+        "name": "_fee",
+        "type": "uint96"
+      },
+      {
+        "internalType": "uint128",
+        "name": "_spotPrice",
+        "type": "uint128"
+      },
+      {
+        "internalType": "address",
+        "name": "_propertyChecker",
+        "type": "address"
+      },
       {
         "internalType": "uint256[]",
         "name": "_initialNFTIDs",
         "type": "uint256[]"
       }
     ],
-    "name": "createPairETH",
+    "name": "createPairERC721ETH",
     "outputs": [
       {
-        "internalType": "contract LSSVMPairETH",
+        "internalType": "contract LSSVMPairERC721ETH",
         "name": "pair",
         "type": "address"
       }
@@ -317,9 +643,49 @@
   },
   {
     "inputs": [
-      { "internalType": "contract ERC20", "name": "token", "type": "address" },
-      { "internalType": "address", "name": "recipient", "type": "address" },
-      { "internalType": "uint256", "name": "amount", "type": "uint256" }
+      {
+        "internalType": "contract IERC1155",
+        "name": "nft",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "depositERC1155",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract ERC20",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
     ],
     "name": "depositERC20",
     "outputs": [],
@@ -328,9 +694,21 @@
   },
   {
     "inputs": [
-      { "internalType": "contract IERC721", "name": "_nft", "type": "address" },
-      { "internalType": "uint256[]", "name": "ids", "type": "uint256[]" },
-      { "internalType": "address", "name": "recipient", "type": "address" }
+      {
+        "internalType": "contract IERC721",
+        "name": "_nft",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "ids",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
+      }
     ],
     "name": "depositNFTs",
     "outputs": [],
@@ -338,11 +716,47 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "settings",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "pairAddress",
+        "type": "address"
+      }
+    ],
+    "name": "disableSettingsForPair",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "settings",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "pairAddress",
+        "type": "address"
+      }
+    ],
+    "name": "enableSettingsForPair",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
-    "name": "enumerableERC20Template",
+    "name": "erc1155ERC20Template",
     "outputs": [
       {
-        "internalType": "contract LSSVMPairEnumerableERC20",
+        "internalType": "contract LSSVMPairERC1155ERC20",
         "name": "",
         "type": "address"
       }
@@ -352,10 +766,36 @@
   },
   {
     "inputs": [],
-    "name": "enumerableETHTemplate",
+    "name": "erc1155ETHTemplate",
     "outputs": [
       {
-        "internalType": "contract LSSVMPairEnumerableETH",
+        "internalType": "contract LSSVMPairERC1155ETH",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "erc721ERC20Template",
+    "outputs": [
+      {
+        "internalType": "contract LSSVMPairERC721ERC20",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "erc721ETHTemplate",
+    "outputs": [
+      {
+        "internalType": "contract LSSVMPairERC721ETH",
         "name": "",
         "type": "address"
       }
@@ -365,26 +805,80 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "potentialPair", "type": "address" },
       {
-        "internalType": "enum ILSSVMPairFactoryLike.PairVariant",
-        "name": "variant",
+        "internalType": "address",
+        "name": "pairAddress",
+        "type": "address"
+      }
+    ],
+    "name": "getPairNFTType",
+    "outputs": [
+      {
+        "internalType": "enum ILSSVMPairFactoryLike.PairNFTType",
+        "name": "",
         "type": "uint8"
       }
     ],
-    "name": "isPair",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "pairAddress",
+        "type": "address"
+      }
+    ],
+    "name": "getPairTokenType",
+    "outputs": [
+      {
+        "internalType": "enum ILSSVMPairFactoryLike.PairTokenType",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "pairAddress",
+        "type": "address"
+      }
+    ],
+    "name": "getSettingsForPair",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "settingsEnabled",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint96",
+        "name": "bps",
+        "type": "uint96"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "missingEnumerableERC20Template",
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "pairAddress",
+        "type": "address"
+      }
+    ],
+    "name": "isValidPair",
     "outputs": [
       {
-        "internalType": "contract LSSVMPairMissingEnumerableERC20",
+        "internalType": "bool",
         "name": "",
-        "type": "address"
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -392,28 +886,34 @@
   },
   {
     "inputs": [],
-    "name": "missingEnumerableETHTemplate",
-    "outputs": [
-      {
-        "internalType": "contract LSSVMPairMissingEnumerableETH",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
+    "name": "openLock",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "owner",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "protocolFeeMultiplier",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -421,26 +921,35 @@
     "inputs": [],
     "name": "protocolFeeRecipient",
     "outputs": [
-      { "internalType": "address payable", "name": "", "type": "address" }
+      {
+        "internalType": "address payable",
+        "name": "",
+        "type": "address"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "renounceOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [
-      { "internalType": "contract LSSVMRouter", "name": "", "type": "address" }
+      {
+        "internalType": "contract LSSVMRouter",
+        "name": "",
+        "type": "address"
+      }
     ],
     "name": "routerStatus",
     "outputs": [
-      { "internalType": "bool", "name": "allowed", "type": "bool" },
-      { "internalType": "bool", "name": "wasEverAllowed", "type": "bool" }
+      {
+        "internalType": "bool",
+        "name": "allowed",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "wasEverTouched",
+        "type": "bool"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -452,7 +961,11 @@
         "name": "bondingCurve",
         "type": "address"
       },
-      { "internalType": "bool", "name": "isAllowed", "type": "bool" }
+      {
+        "internalType": "bool",
+        "name": "isAllowed",
+        "type": "bool"
+      }
     ],
     "name": "setBondingCurveAllowed",
     "outputs": [],
@@ -466,7 +979,11 @@
         "name": "target",
         "type": "address"
       },
-      { "internalType": "bool", "name": "isAllowed", "type": "bool" }
+      {
+        "internalType": "bool",
+        "name": "isAllowed",
+        "type": "bool"
+      }
     ],
     "name": "setCallAllowed",
     "outputs": [],
@@ -480,7 +997,11 @@
         "name": "_router",
         "type": "address"
       },
-      { "internalType": "bool", "name": "isAllowed", "type": "bool" }
+      {
+        "internalType": "bool",
+        "name": "isAllowed",
+        "type": "bool"
+      }
     ],
     "name": "setRouterAllowed",
     "outputs": [],
@@ -489,7 +1010,77 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "newOwner", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "settingsForCollection",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "settingsForPair",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "settings",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "collectionAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "enable",
+        "type": "bool"
+      }
+    ],
+    "name": "toggleSettingsForCollection",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
     ],
     "name": "transferOwnership",
     "outputs": [],
@@ -498,8 +1089,16 @@
   },
   {
     "inputs": [
-      { "internalType": "contract ERC20", "name": "token", "type": "address" },
-      { "internalType": "uint256", "name": "amount", "type": "uint256" }
+      {
+        "internalType": "contract ERC20",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
     ],
     "name": "withdrawERC20ProtocolFees",
     "outputs": [],
@@ -513,5 +1112,8 @@
     "stateMutability": "nonpayable",
     "type": "function"
   },
-  { "stateMutability": "payable", "type": "receive" }
+  {
+    "stateMutability": "payable",
+    "type": "receive"
+  }
 ]

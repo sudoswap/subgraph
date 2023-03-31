@@ -6,6 +6,7 @@ type Pair @entity {
   token: Token
   "poolType of the LSSVMPair (TOKEN, NFT, or TRADE)"
   type: BigInt!
+  variant: BigInt!
   assetRecipient: String!
   bondingCurve: String!
   delta: BigInt!

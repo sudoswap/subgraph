@@ -46,7 +46,14 @@ export function handleTokenDeposit(event: TokenDeposit): void {
     let pair = Pair.load(event.address.toHex())
     if (pair!.token === null) {
         // ETH pair
-        handleEthBalanceUpdate(event)
+        pair!.ethBalance = pair!.ethBalance.plus(event.params.amount)
+        pair!.save()
+        
+        if (shouldCountPairOfferTVL(pair!)) {
+            let collection = Collection.load(pair!.collection)
+            collection!.ethOfferTVL = collection!.ethOfferTVL.plus(event.params.amount)
+            collection!.save()
+        }
     } else {
         // ERC20 pair
         pair!.tokenBalance = pair!.tokenBalance!.plus(event.params.amount)
@@ -58,7 +65,14 @@ export function handleTokenWithdrawal(event: TokenWithdrawal): void {
     let pair = Pair.load(event.address.toHex())
     if (pair!.token === null) {
         // ETH pair
-        handleEthBalanceUpdate(event)
+        pair!.ethBalance = pair!.ethBalance.minus(event.params.amount)
+        pair!.save()
+        
+        if (shouldCountPairOfferTVL(pair!)) {
+            let collection = Collection.load(pair!.collection)
+            collection!.ethOfferTVL = collection!.ethOfferTVL.minus(event.params.amount)
+            collection!.save()
+        }
     } else {
         // ERC20 pair
         pair!.tokenBalance = pair!.tokenBalance!.minus(event.params.amount)
@@ -70,24 +84,17 @@ export function handleSwapNFTInPair(event: SwapNFTInPair): void {
     let pair = Pair.load(event.address.toHex())
     if (pair!.token === null) {
         // ETH pair
-        let ethChange = handleEthBalanceUpdate(event)
-        // Note: we must load pair and collection after the handleEthBalanceUpdate call
-        // since we make changes to those entities in the call
-
-        pair = Pair.load(event.address.toHex())
-        pair!.ethVolume = pair!.ethVolume.plus(ethChange.abs())
+        pair!.ethBalance = pair!.ethBalance.plus(event.params.amountIn)
+        pair!.ethVolume = pair!.ethVolume.plus(event.params.amountIn)
         pair!.save()
 
         let collection = Collection.load(pair!.collection)
-        collection!.ethVolume = collection!.ethVolume.plus(ethChange.abs())
+        collection!.ethVolume = collection!.ethVolume.plus(event.params.amountIn)
         collection!.save()
     } else {
         // ERC20 pair
-        let tokenContract = ERC20.bind(Address.fromString(pair!.token!))
-        let tokenBalanceResult = tokenContract.try_balanceOf(event.address)
-        let tokenChange = tokenBalanceResult.reverted ? BigInt.zero() : tokenBalanceResult.value.minus(pair!.tokenBalance!)
-        pair!.tokenBalance = pair!.tokenBalance!.plus(tokenChange)
-        pair!.tokenVolume = pair!.tokenVolume!.plus(tokenChange.abs())
+        pair!.tokenBalance = pair!.tokenBalance!.plus(event.params.amountIn)
+        pair!.tokenVolume = pair!.tokenVolume!.plus(event.params.amountIn)
         pair!.save()
     }
 }
@@ -96,24 +103,17 @@ export function handleSwapNFTOutPair(event: SwapNFTOutPair): void {
     let pair = Pair.load(event.address.toHex())
     if (pair!.token === null) {
         // ETH pair
-        let ethChange = handleEthBalanceUpdate(event)
-        // Note: we must load pair and collection after the handleEthBalanceUpdate call
-        // since we make changes to those entities in the call
-
-        pair = Pair.load(event.address.toHex())
-        pair!.ethVolume = pair!.ethVolume.plus(ethChange.abs())
+        pair!.ethBalance = pair!.ethBalance.minus(event.params.amountOut)
+        pair!.ethVolume = pair!.ethVolume.minus(event.params.amountOut)
         pair!.save()
 
         let collection = Collection.load(pair!.collection)
-        collection!.ethVolume = collection!.ethVolume.plus(ethChange.abs())
+        collection!.ethVolume = collection!.ethVolume.plus(event.params.amountOut)
         collection!.save()
     } else {
         // ERC20 pair
-        let tokenContract = ERC20.bind(Address.fromString(pair!.token!))
-        let tokenBalanceResult = tokenContract.try_balanceOf(event.address)
-        let tokenChange = tokenBalanceResult.reverted ? BigInt.zero() : tokenBalanceResult.value.minus(pair!.tokenBalance!)
-        pair!.tokenBalance = pair!.tokenBalance!.plus(tokenChange)
-        pair!.tokenVolume = pair!.tokenVolume!.plus(tokenChange.abs())
+        pair!.tokenBalance = pair!.tokenBalance!.minus(event.params.amountOut)
+        pair!.tokenVolume = pair!.tokenVolume!.plus(event.params.amountOut)
         pair!.save()
     }
 }
@@ -127,7 +127,7 @@ export function handleSwapTokenForSpecificNFTs(call: SwapTokenForSpecificNFTsCal
     swap.timestamp = call.block.timestamp
     swap.transactionHash = call.transaction.hash.toHex()
     swap.isTokenToNFT = true
-    swap.tokenAmount = call.outputs.inputAmount
+    swap.tokenAmount = call.outputs.value0
     swap.nftIds = call.inputs.nftIds
     swap.save()
 
@@ -150,22 +150,6 @@ export function handleSwapNFTsForToken(call: SwapNFTsForTokenCall): void {
 
     pair.swapNonce = pair.swapNonce.plus(BigInt.fromI32(1))
     pair.save()
-}
-
-function handleEthBalanceUpdate(event: ethereum.Event): BigInt {
-    let multicall3 = Multicall3.bind(Address.fromString("0xcA11bde05977b3631167028862bE2a173976CA11"))
-    let pair = Pair.load(event.address.toHex())
-    let ethChange = multicall3.getEthBalance(event.address).minus(pair!.ethBalance) // positive when ETH goes into the pair, negative when ETH goes out of the pair
-    pair!.ethBalance = pair!.ethBalance.plus(ethChange)
-    pair!.save()
-
-    if (shouldCountPairOfferTVL(pair!)) {
-        let collection = Collection.load(pair!.collection)
-        collection!.ethOfferTVL = collection!.ethOfferTVL.plus(ethChange)
-        collection!.save()
-    }
-
-    return ethChange
 }
 
 function shouldCountPairOfferTVL(pair: Pair): bool {

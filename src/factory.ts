@@ -1,13 +1,13 @@
 import {
-  CreatePairERC20Call,
-  CreatePairETHCall
+  CreatePairERC721ERC20Call,
+  CreatePairERC721ETHCall
 } from "../generated/LSSVMFactory/LSSVMFactory"
 import { Pair, Collection, PairOwner, Token } from "../generated/schema"
 import { BigInt } from "@graphprotocol/graph-ts"
 import { LSSVMPair as PairTemplate, ERC721 as ERC721Template } from "../generated/templates"
 import { ERC20 } from "../generated/LSSVMFactory/ERC20"
 
-export function handleNewETHPair(call: CreatePairETHCall): void {
+export function handleNewERC721ETHPair(call: CreatePairERC721ETHCall): void {
   let pair = new Pair(call.outputs.pair.toHex())
 
   let ownerAddress = call.from
@@ -28,6 +28,7 @@ export function handleNewETHPair(call: CreatePairETHCall): void {
   pair.owner = pairOwner.id
   pair.collection = collection.id
   pair.type = BigInt.fromI32(call.inputs._poolType)
+  pair.variant = BigInt.fromI32(0) // ERC721_ETH
   pair.assetRecipient = call.inputs._assetRecipient.toHex()
   pair.bondingCurve = call.inputs._bondingCurve.toHex()
   pair.delta = call.inputs._delta
@@ -52,7 +53,7 @@ export function handleNewETHPair(call: CreatePairETHCall): void {
   }
 }
 
-export function handleNewERC20Pair(call: CreatePairERC20Call): void {
+export function handleNewERC721ERC20Pair(call: CreatePairERC721ERC20Call): void {
   let pair = new Pair(call.outputs.pair.toHex())
 
   let ownerAddress = call.from
@@ -73,6 +74,7 @@ export function handleNewERC20Pair(call: CreatePairERC20Call): void {
   pair.owner = pairOwner.id
   pair.collection = collection.id
   pair.type = BigInt.fromI32(call.inputs.params.poolType)
+  pair.variant = BigInt.fromI32(1) // ERC721_ERC20
   pair.assetRecipient = call.inputs.params.assetRecipient.toHex()
   pair.bondingCurve = call.inputs.params.bondingCurve.toHex()
   pair.delta = call.inputs.params.delta
