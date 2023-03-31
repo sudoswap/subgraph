@@ -9,6 +9,7 @@ type Pair @entity {
   variant: BigInt!
   assetRecipient: String!
   bondingCurve: String!
+  propertyChecker: String
   delta: BigInt!
   fee: BigInt!
   spotPrice: BigInt!

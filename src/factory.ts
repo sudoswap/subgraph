@@ -33,6 +33,7 @@ export function handleNewERC721ETHPair(call: CreatePairERC721ETHCall): void {
   pair.variant = BigInt.fromI32(0) // ERC721_ETH
   pair.assetRecipient = call.inputs._assetRecipient.toHex()
   pair.bondingCurve = call.inputs._bondingCurve.toHex()
+  pair.propertyChecker = call.inputs._propertyChecker.toHex()
   pair.delta = call.inputs._delta
   pair.fee = call.inputs._fee
   pair.spotPrice = call.inputs._spotPrice
@@ -79,6 +80,7 @@ export function handleNewERC721ERC20Pair(call: CreatePairERC721ERC20Call): void 
   pair.variant = BigInt.fromI32(1) // ERC721_ERC20
   pair.assetRecipient = call.inputs.params.assetRecipient.toHex()
   pair.bondingCurve = call.inputs.params.bondingCurve.toHex()
+  pair.propertyChecker = call.inputs.params.propertyChecker.toHex()
   pair.delta = call.inputs.params.delta
   pair.fee = call.inputs.params.fee
   pair.spotPrice = call.inputs.params.spotPrice
@@ -144,6 +146,7 @@ export function handleNewERC1155ETHPair(call: CreatePairERC1155ETHCall): void {
   pair.delta = call.inputs._delta
   pair.fee = call.inputs._fee
   pair.spotPrice = call.inputs._spotPrice
+  pair.nftId = call.inputs._nftId
   pair.numNfts = call.inputs._initialNFTBalance
   pair.tokenBalance = BigInt.zero()
   pair.tokenVolume = BigInt.zero()
@@ -187,6 +190,7 @@ export function handleNewERC1155ERC20Pair(call: CreatePairERC1155ERC20Call): voi
   pair.delta = call.inputs.params.delta
   pair.fee = call.inputs.params.fee
   pair.spotPrice = call.inputs.params.spotPrice
+  pair.nftId = call.inputs.params.nftId
   pair.numNfts = call.inputs.params.initialNFTBalance
   pair.tokenBalance = BigInt.zero()
   pair.tokenVolume = BigInt.zero()
