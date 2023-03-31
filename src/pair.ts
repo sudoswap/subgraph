@@ -1,4 +1,4 @@
-import { AssetRecipientChange, DeltaUpdate, FeeUpdate, OwnershipTransferred, SpotPriceUpdate, SwapNFTInPair, SwapNFTOutPair, SwapNFTsForTokenCall, SwapTokenForSpecificNFTsCall, TokenDeposit, TokenWithdrawal } from "../generated/templates/LSSVMPair/LSSVMPair"
+import { AssetRecipientChange, DeltaUpdate, FeeUpdate, OwnershipTransferred, SpotPriceUpdate, SwapNFTInPair, SwapNFTInPair1, SwapNFTOutPair, SwapNFTOutPair1, SwapNFTsForTokenCall, SwapTokenForSpecificNFTsCall, TokenDeposit, TokenWithdrawal } from "../generated/templates/LSSVMPair/LSSVMPair"
 import { Collection, Pair, PairOwner, Swap } from "../generated/schema"
 import { BigInt } from "@graphprotocol/graph-ts"
 
@@ -78,7 +78,7 @@ export function handleTokenWithdrawal(event: TokenWithdrawal): void {
     }
 }
 
-export function handleSwapNFTInPair(event: SwapNFTInPair): void {
+export function handleSwapNFTInPair_erc721(event: SwapNFTInPair): void {
     let pair = Pair.load(event.address.toHex())
     if (pair!.token === null) {
         // ETH pair
@@ -97,7 +97,45 @@ export function handleSwapNFTInPair(event: SwapNFTInPair): void {
     }
 }
 
-export function handleSwapNFTOutPair(event: SwapNFTOutPair): void {
+export function handleSwapNFTOutPair_erc721(event: SwapNFTOutPair): void {
+    let pair = Pair.load(event.address.toHex())
+    if (pair!.token === null) {
+        // ETH pair
+        pair!.tokenBalance = pair!.tokenBalance.minus(event.params.amountOut)
+        pair!.tokenVolume = pair!.tokenVolume.minus(event.params.amountOut)
+        pair!.save()
+
+        let collection = Collection.load(pair!.collection)
+        collection!.ethVolume = collection!.ethVolume.plus(event.params.amountOut)
+        collection!.save()
+    } else {
+        // ERC20 pair
+        pair!.tokenBalance = pair!.tokenBalance.minus(event.params.amountOut)
+        pair!.tokenVolume = pair!.tokenVolume.plus(event.params.amountOut)
+        pair!.save()
+    }
+}
+
+export function handleSwapNFTInPair_erc1155(event: SwapNFTInPair1): void {
+    let pair = Pair.load(event.address.toHex())
+    if (pair!.token === null) {
+        // ETH pair
+        pair!.tokenBalance = pair!.tokenBalance.plus(event.params.amountIn)
+        pair!.tokenVolume = pair!.tokenVolume.plus(event.params.amountIn)
+        pair!.save()
+
+        let collection = Collection.load(pair!.collection)
+        collection!.ethVolume = collection!.ethVolume.plus(event.params.amountIn)
+        collection!.save()
+    } else {
+        // ERC20 pair
+        pair!.tokenBalance = pair!.tokenBalance.plus(event.params.amountIn)
+        pair!.tokenVolume = pair!.tokenVolume.plus(event.params.amountIn)
+        pair!.save()
+    }
+}
+
+export function handleSwapNFTOutPair_erc1155(event: SwapNFTOutPair1): void {
     let pair = Pair.load(event.address.toHex())
     if (pair!.token === null) {
         // ETH pair

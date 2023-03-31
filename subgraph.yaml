@@ -69,9 +69,18 @@ templates:
         - event: TokenWithdrawal(uint256)
           handler: handleTokenWithdrawal
         - event: SwapNFTInPair(uint256,uint256[])
-          handler: handleSwapNFTInPair
+          handler: handleSwapNFTInPair_erc721
         - event: SwapNFTOutPair(uint256,uint256[])
-          handler: handleSwapNFTOutPair
+          handler: handleSwapNFTOutPair_erc721
+        - event: SwapNFTInPair(uint256,uint256)
+          handler: handleSwapNFTInPair_erc1155
+        - event: SwapNFTOutPair(uint256,uint256)
+          handler: handleSwapNFTOutPair_erc1155
+      callHandlers:
+        - function: swapTokenForSpecificNFTs(uint256[],uint256,address,bool,address)
+          handler: handleSwapTokenForSpecificNFTs
+        - function: swapNFTsForToken(uint256[],uint256,address payable,bool,address)
+          handler: handleSwapNFTsForToken
       file: ./src/pair.ts
   - kind: ethereum
     name: ERC721
