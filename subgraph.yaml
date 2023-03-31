@@ -29,6 +29,10 @@ dataSources:
           handler: handleNewERC721ETHPair
         - function: createPairERC721ERC20((address,address,address,address,uint8,uint128,uint96,uint128,address,uint256[],uint256))
           handler: handleNewERC721ERC20Pair
+        - function: createPairERC1155ETH(address,address,address,uint8,uint128,uint96,uint128,uint256,uint256)
+          handler: handleNewERC1155ETHPair
+        - function: createPairERC1155ERC20((address,address,address,address,uint8,uint128,uint96,uint128,uint256,uint256,uint256))
+          handler: handleNewERC1155ERC20Pair
       file: ./src/factory.ts
 templates:
   - kind: ethereum
@@ -89,3 +93,23 @@ templates:
         - event: ConsecutiveTransfer(indexed uint256,uint256,indexed address,indexed address)
           handler: handleConsecutiveTransfer
       file: ./src/erc721.ts
+  - kind: ethereum
+    name: ERC1155
+    network: mainnet
+    source:
+      abi: ERC1155
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Pair
+      abis:
+        - name: ERC1155
+          file: ./abis/ERC1155.json
+      eventHandlers:
+        - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleTransferSingle
+        - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
+          handler: handleTransferBatch
+      file: ./src/erc1155.ts

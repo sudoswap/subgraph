@@ -13,10 +13,10 @@ export function handleTransfer(event: Transfer): void {
     let tokenId = event.params.tokenId
 
     let fromPair = Pair.load(from.toHex())
-    if (fromPair !== null) {
+    if (fromPair !== null && fromPair.variant.lt(BigInt.fromI32(2))) {
         // the from address is a pair
         // remove NFT from pair
-        let nftIds = fromPair.nftIds
+        let nftIds = fromPair.nftIds!
 
         // use binary search to find the index of the greatest element
         // < tokenId
@@ -36,10 +36,10 @@ export function handleTransfer(event: Transfer): void {
     }
 
     let toPair = Pair.load(to.toHex())
-    if (toPair !== null) {
+    if (toPair !== null && toPair.variant.lt(BigInt.fromI32(2))) {
         // the to address is a pair
         // add NFT to pair
-        let nftIds = toPair.nftIds
+        let nftIds = toPair.nftIds!
 
         // use binary search to find the index of the greatest element
         // < tokenId
@@ -78,10 +78,10 @@ export function handleConsecutiveTransfer(event: ConsecutiveTransfer): void {
     }
 
     let fromPair = Pair.load(fromAddress.toHex())
-    if (fromPair !== null) {
+    if (fromPair !== null && fromPair.variant.lt(BigInt.fromI32(2))) {
         // the from address is a pair
         // remove NFT from pair
-        let nftIds = fromPair.nftIds
+        let nftIds = fromPair.nftIds!
 
         // use binary search to find the index of the greatest element
         // < fromTokenId
@@ -101,10 +101,10 @@ export function handleConsecutiveTransfer(event: ConsecutiveTransfer): void {
     }
 
     let toPair = Pair.load(toAddress.toHex())
-    if (toPair !== null) {
+    if (toPair !== null && toPair.variant.lt(BigInt.fromI32(2))) {
         // the to address is a pair
         // add NFT to pair
-        let nftIds = toPair.nftIds
+        let nftIds = toPair.nftIds!
         let consecutiveNftIds = new Array<BigInt>(numTokenTransfers.toI32())
         for (let i = BigInt.zero(); i.lt(numTokenTransfers); i = i.plus(ONE_INT)) {
             consecutiveNftIds[i.toI32()] = i.plus(ONE_INT)
