@@ -1,6 +1,6 @@
 import { AssetRecipientChange, DeltaUpdate, FeeUpdate, OwnershipTransferred, SpotPriceUpdate, SwapNFTInPair, SwapNFTInPair1 as SwapNFTInPairERC1155, SwapNFTOutPair, SwapNFTOutPair1 as SwapNFTOutPairERC1155, TokenDeposit, TokenWithdrawal } from "../generated/templates/LSSVMPair/LSSVMPair"
 import { Collection, Pair, PairOwner, Swap } from "../generated/schema"
-import { BigInt } from "@graphprotocol/graph-ts"
+import { Address, BigInt } from "@graphprotocol/graph-ts"
 
 export function handleOwnershipTransferred(event: OwnershipTransferred): void {
     let pair = Pair.load(event.address.toHex())!
@@ -97,7 +97,9 @@ export function handleSwapNFTInPair_erc721(event: SwapNFTInPair): void {
 
     if (pair.token === null) {
         // ETH pair
-        pair.tokenBalance = pair.tokenBalance.minus(tokenAmount)
+        if (pair.assetRecipient === Address.zero().toHex()) {
+            pair.tokenBalance = pair.tokenBalance.minus(tokenAmount)
+        }
         pair.tokenVolume = pair.tokenVolume.plus(tokenAmount)
         pair.save()
 
@@ -106,7 +108,9 @@ export function handleSwapNFTInPair_erc721(event: SwapNFTInPair): void {
         collection!.save()
     } else {
         // ERC20 pair
-        pair.tokenBalance = pair.tokenBalance.minus(tokenAmount)
+        if (pair.assetRecipient === Address.zero().toHex()) {
+            pair.tokenBalance = pair.tokenBalance.minus(tokenAmount)
+        }
         pair.tokenVolume = pair.tokenVolume.plus(tokenAmount)
         pair.save()
     }
@@ -131,7 +135,9 @@ export function handleSwapNFTOutPair_erc721(event: SwapNFTOutPair): void {
 
     if (pair.token === null) {
         // ETH pair
-        pair.tokenBalance = pair.tokenBalance.plus(tokenAmount)
+        if (pair.assetRecipient === Address.zero().toHex()) {
+            pair.tokenBalance = pair.tokenBalance.plus(tokenAmount)
+        }
         pair.tokenVolume = pair.tokenVolume.plus(tokenAmount)
         pair.save()
 
@@ -140,7 +146,9 @@ export function handleSwapNFTOutPair_erc721(event: SwapNFTOutPair): void {
         collection!.save()
     } else {
         // ERC20 pair
-        pair.tokenBalance = pair.tokenBalance.plus(tokenAmount)
+        if (pair.assetRecipient === Address.zero().toHex()) {
+            pair.tokenBalance = pair.tokenBalance.plus(tokenAmount)
+        }
         pair.tokenVolume = pair.tokenVolume.plus(tokenAmount)
         pair.save()
     }
@@ -167,7 +175,9 @@ export function handleSwapNFTInPair_erc1155(event: SwapNFTInPairERC1155): void {
 
     if (pair.token === null) {
         // ETH pair
-        pair.tokenBalance = pair.tokenBalance.minus(tokenAmount)
+        if (pair.assetRecipient === Address.zero().toHex()) {
+            pair.tokenBalance = pair.tokenBalance.minus(tokenAmount)
+        }
         pair.tokenVolume = pair.tokenVolume.plus(tokenAmount)
         pair.save()
 
@@ -176,7 +186,9 @@ export function handleSwapNFTInPair_erc1155(event: SwapNFTInPairERC1155): void {
         collection!.save()
     } else {
         // ERC20 pair
-        pair.tokenBalance = pair.tokenBalance.minus(tokenAmount)
+        if (pair.assetRecipient === Address.zero().toHex()) {
+            pair.tokenBalance = pair.tokenBalance.minus(tokenAmount)
+        }
         pair.tokenVolume = pair.tokenVolume.plus(tokenAmount)
         pair.save()
     }
@@ -203,7 +215,9 @@ export function handleSwapNFTOutPair_erc1155(event: SwapNFTOutPairERC1155): void
 
     if (pair.token === null) {
         // ETH pair
-        pair.tokenBalance = pair.tokenBalance.plus(tokenAmount)
+        if (pair.assetRecipient === Address.zero().toHex()) {
+            pair.tokenBalance = pair.tokenBalance.plus(tokenAmount)
+        }
         pair.tokenVolume = pair.tokenVolume.plus(tokenAmount)
         pair.save()
 
@@ -212,7 +226,9 @@ export function handleSwapNFTOutPair_erc1155(event: SwapNFTOutPairERC1155): void
         collection!.save()
     } else {
         // ERC20 pair
-        pair.tokenBalance = pair.tokenBalance.plus(tokenAmount)
+        if (pair.assetRecipient === Address.zero().toHex()) {
+            pair.tokenBalance = pair.tokenBalance.plus(tokenAmount)
+        }
         pair.tokenVolume = pair.tokenVolume.plus(tokenAmount)
         pair.save()
     }
