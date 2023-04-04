@@ -147,7 +147,7 @@ export function handleNewERC1155ETHPair(call: CreatePairERC1155ETHCall): void {
   pair.fee = call.inputs._fee
   pair.spotPrice = call.inputs._spotPrice
   pair.nftId = call.inputs._nftId
-  pair.numNfts = call.inputs._initialNFTBalance
+  pair.numNfts = BigInt.zero() // init to 0 because the ERC1155 handler will update it
   pair.tokenBalance = BigInt.zero()
   pair.tokenVolume = BigInt.zero()
 
@@ -191,7 +191,7 @@ export function handleNewERC1155ERC20Pair(call: CreatePairERC1155ERC20Call): voi
   pair.fee = call.inputs.params.fee
   pair.spotPrice = call.inputs.params.spotPrice
   pair.nftId = call.inputs.params.nftId
-  pair.numNfts = call.inputs.params.initialNFTBalance
+  pair.numNfts = BigInt.zero() // init to 0 because the ERC1155 handler will update it
   pair.tokenBalance = BigInt.zero()
   pair.tokenVolume = BigInt.zero()
 
