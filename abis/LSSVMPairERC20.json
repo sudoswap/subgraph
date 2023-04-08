@@ -1,6 +1,21 @@
 [
   {
     "inputs": [],
+    "name": "LSSVMPairERC20__AssetRecipientNotPaid",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "LSSVMPairERC20__MsgValueNotZero",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "LSSVMPairERC20__RoyaltyNotPaid",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "LSSVMPair__AlreadyInitialized",
     "type": "error"
   },
@@ -904,6 +919,19 @@
       }
     ],
     "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "token",
+    "outputs": [
+      {
+        "internalType": "contract ERC20",
+        "name": "_token",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "pure",
     "type": "function"
   },
   {

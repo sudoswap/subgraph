@@ -1,6 +1,11 @@
 [
   {
     "inputs": [],
+    "name": "LSSVMPairETH__InsufficientInput",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "LSSVMPair__AlreadyInitialized",
     "type": "error"
   },
@@ -287,6 +292,10 @@
     ],
     "name": "TokenWithdrawal",
     "type": "event"
+  },
+  {
+    "stateMutability": "payable",
+    "type": "fallback"
   },
   {
     "inputs": [],
@@ -925,6 +934,13 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "withdrawAllETH",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "contract IERC1155",
@@ -982,5 +998,22 @@
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "withdrawETH",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "stateMutability": "payable",
+    "type": "receive"
   }
 ]

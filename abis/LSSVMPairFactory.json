@@ -194,6 +194,12 @@
         "internalType": "address",
         "name": "poolAddress",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "initialBalance",
+        "type": "uint256"
       }
     ],
     "name": "NewERC1155Pair",
@@ -207,6 +213,12 @@
         "internalType": "address",
         "name": "poolAddress",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256[]",
+        "name": "initialIds",
+        "type": "uint256[]"
       }
     ],
     "name": "NewERC721Pair",

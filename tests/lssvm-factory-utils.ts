@@ -10,7 +10,7 @@ import {
   ProtocolFeeRecipientUpdate,
   RouterStatusUpdate,
   TokenDeposit
-} from "../generated/LSSVMFactory/LSSVMFactory"
+} from "../generated/LSSVMPairFactory/LSSVMPairFactory"
 
 export function createBondingCurveStatusUpdateEvent(
   bondingCurve: Address,

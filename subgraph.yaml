@@ -3,12 +3,12 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: LSSVMFactory
+    name: LSSVMPairFactory
     network: mainnet
     source:
-      address: "0x4421101F405322d4299244BB1b106690B5CAeCD3"
-      abi: LSSVMFactory
-      startBlock: 16836772
+      address: "0x8b7fBD3F1065B3Dd0B7dd35FC879B614637d57b0"
+      abi: LSSVMPairFactory
+      startBlock: 16999518
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -18,21 +18,25 @@ dataSources:
         - PairOwner
         - Collection
       abis:
-        - name: LSSVMFactory
-          file: ./abis/LSSVMFactory.json
+        - name: LSSVMPairFactory
+          file: ./abis/LSSVMPairFactory.json
         - name: LSSVMPair
           file: ./abis/LSSVMPair.json
+        - name: LSSVMPairERC721
+          file: ./abis/LSSVMPairERC721.json
+        - name: LSSVMPairERC1155
+          file: ./abis/LSSVMPairERC1155.json
+        - name: LSSVMPairETH
+          file: ./abis/LSSVMPairETH.json
+        - name: LSSVMPairERC20
+          file: ./abis/LSSVMPairERC20.json
         - name: ERC20
           file: ./abis/ERC20.json
-      callHandlers:
-        - function: createPairERC721ETH(address,address,address,uint8,uint128,uint96,uint128,address,uint256[])
-          handler: handleNewERC721ETHPair
-        - function: createPairERC721ERC20((address,address,address,address,uint8,uint128,uint96,uint128,address,uint256[],uint256))
-          handler: handleNewERC721ERC20Pair
-        - function: createPairERC1155ETH(address,address,address,uint8,uint128,uint96,uint128,uint256,uint256)
-          handler: handleNewERC1155ETHPair
-        - function: createPairERC1155ERC20((address,address,address,address,uint8,uint128,uint96,uint128,uint256,uint256,uint256))
-          handler: handleNewERC1155ERC20Pair
+      eventHandlers:
+        - event: NewERC721Pair(indexed address,uint256[])
+          handler: handleNewERC721Pair
+        - event: NewERC1155Pair(indexed address,uint256)
+          handler: handleNewERC1155Pair
       file: ./src/factory.ts
 templates:
   - kind: ethereum

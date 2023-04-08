@@ -8,7 +8,7 @@ import {
 } from "matchstick-as/assembly/index"
 import { Address, BigInt } from "@graphprotocol/graph-ts"
 import { ExampleEntity } from "../generated/schema"
-import { BondingCurveStatusUpdate } from "../generated/LSSVMFactory/LSSVMFactory"
+import { BondingCurveStatusUpdate } from "../generated/LSSVMPairFactory/LSSVMPairFactory"
 import { handleBondingCurveStatusUpdate } from "../src/lssvm-factory"
 import { createBondingCurveStatusUpdateEvent } from "./lssvm-factory-utils"
 

@@ -1,7 +1,7 @@
 {
   "mainnet": {
-    "LSSVMFactory": {
-      "address": "0x4421101F405322d4299244BB1b106690B5CAeCD3"
+    "LSSVMPairFactory": {
+      "address": "0x8b7fBD3F1065B3Dd0B7dd35FC879B614637d57b0"
     }
   }
 }

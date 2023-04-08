@@ -81,7 +81,7 @@ export function handleTokenWithdrawal(event: TokenWithdrawal): void {
 export function handleSwapNFTInPair_erc721(event: SwapNFTInPair): void {
     // ERC721 -> Token swap
     let pair = Pair.load(event.address.toHex())!
-    let tokenAmount = event.params.amountIn
+    let tokenAmount = event.params.amountOut
 
     let swap = new Swap(pair.id + "-" + pair.swapNonce.toString())
     swap.pair = pair.id
@@ -119,7 +119,7 @@ export function handleSwapNFTInPair_erc721(event: SwapNFTInPair): void {
 export function handleSwapNFTOutPair_erc721(event: SwapNFTOutPair): void {
     // Token -> ERC721 swap
     let pair = Pair.load(event.address.toHex())!
-    let tokenAmount = event.params.amountOut
+    let tokenAmount = event.params.amountIn
 
     let swap = new Swap(pair.id + "-" + pair.swapNonce.toString())
     swap.pair = pair.id
@@ -157,7 +157,7 @@ export function handleSwapNFTOutPair_erc721(event: SwapNFTOutPair): void {
 export function handleSwapNFTInPair_erc1155(event: SwapNFTInPairERC1155): void {
     // ERC1155 -> Token swap
     let pair = Pair.load(event.address.toHex())!
-    let tokenAmount = event.params.amountIn
+    let tokenAmount = event.params.amountOut
 
     let swap = new Swap(pair.id + "-" + pair.swapNonce.toString())
     swap.pair = pair.id
@@ -197,7 +197,7 @@ export function handleSwapNFTInPair_erc1155(event: SwapNFTInPairERC1155): void {
 export function handleSwapNFTOutPair_erc1155(event: SwapNFTOutPairERC1155): void {
     // Token -> ERC1155 swap
     let pair = Pair.load(event.address.toHex())!
-    let tokenAmount = event.params.amountOut
+    let tokenAmount = event.params.amountIn
 
     let swap = new Swap(pair.id + "-" + pair.swapNonce.toString())
     swap.pair = pair.id
@@ -205,7 +205,7 @@ export function handleSwapNFTOutPair_erc1155(event: SwapNFTOutPairERC1155): void
     swap.timestamp = event.block.timestamp
     swap.transactionHash = event.transaction.hash.toHex()
     swap.isTokenToNFT = true
-    swap.tokenAmount = event.params.amountOut
+    swap.tokenAmount = event.params.amountIn
     let nftIds = new Array<BigInt>(1)
     nftIds[0] = event.params.numNFTs
     swap.nftIds = nftIds
