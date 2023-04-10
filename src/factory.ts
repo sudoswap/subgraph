@@ -109,7 +109,7 @@ export function handleNewERC1155Pair(event: NewERC1155Pair): void {
   pair.fee = pairContract.fee()
   pair.spotPrice = pairContract.spotPrice()
   pair.nftId = pairContract.nftId()
-  pair.numNfts = BigInt.zero()
+  pair.numNfts = event.params.initialBalance
   pair.tokenBalance = BigInt.zero()
   pair.tokenVolume = BigInt.zero()
   pair.swapNonce = BigInt.zero()
