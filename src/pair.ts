@@ -103,7 +103,7 @@ export function handleSwapNFTInPair_erc721(event: SwapNFTInPair): void {
 
     if (pair.token === null) {
         // ETH pair
-        if (pair.assetRecipient === event.address.toHex()) {
+        if (Address.fromString(pair.assetRecipient).equals(event.address)) {
             pair.tokenBalance = pair.tokenBalance.minus(tokenAmount)
         }
         pair.tokenVolume = pair.tokenVolume.plus(tokenAmount)
@@ -114,7 +114,7 @@ export function handleSwapNFTInPair_erc721(event: SwapNFTInPair): void {
         collection!.save()
     } else {
         // ERC20 pair
-        if (pair.assetRecipient === event.address.toHex()) {
+        if (Address.fromString(pair.assetRecipient).equals(event.address)) {
             pair.tokenBalance = pair.tokenBalance.minus(tokenAmount)
         }
         pair.tokenVolume = pair.tokenVolume.plus(tokenAmount)
@@ -141,7 +141,7 @@ export function handleSwapNFTOutPair_erc721(event: SwapNFTOutPair): void {
 
     if (pair.token === null) {
         // ETH pair
-        if (pair.assetRecipient === event.address.toHex()) {
+        if (Address.fromString(pair.assetRecipient).equals(event.address)) {
             pair.tokenBalance = pair.tokenBalance.plus(tokenAmount)
         }
         pair.tokenVolume = pair.tokenVolume.plus(tokenAmount)
@@ -152,7 +152,7 @@ export function handleSwapNFTOutPair_erc721(event: SwapNFTOutPair): void {
         collection!.save()
     } else {
         // ERC20 pair
-        if (pair.assetRecipient === event.address.toHex()) {
+        if (Address.fromString(pair.assetRecipient).equals(event.address)) {
             pair.tokenBalance = pair.tokenBalance.plus(tokenAmount)
         }
         pair.tokenVolume = pair.tokenVolume.plus(tokenAmount)
@@ -181,7 +181,7 @@ export function handleSwapNFTInPair_erc1155(event: SwapNFTInPairERC1155): void {
 
     if (pair.token === null) {
         // ETH pair
-        if (pair.assetRecipient === event.address.toHex()) {
+        if (Address.fromString(pair.assetRecipient).equals(event.address)) {
             pair.tokenBalance = pair.tokenBalance.minus(tokenAmount)
         }
         pair.tokenVolume = pair.tokenVolume.plus(tokenAmount)
@@ -192,7 +192,7 @@ export function handleSwapNFTInPair_erc1155(event: SwapNFTInPairERC1155): void {
         collection!.save()
     } else {
         // ERC20 pair
-        if (pair.assetRecipient === event.address.toHex()) {
+        if (Address.fromString(pair.assetRecipient).equals(event.address)) {
             pair.tokenBalance = pair.tokenBalance.minus(tokenAmount)
         }
         pair.tokenVolume = pair.tokenVolume.plus(tokenAmount)
@@ -221,7 +221,7 @@ export function handleSwapNFTOutPair_erc1155(event: SwapNFTOutPairERC1155): void
 
     if (pair.token === null) {
         // ETH pair
-        if (pair.assetRecipient === event.address.toHex()) {
+        if (Address.fromString(pair.assetRecipient).equals(event.address)) {
             pair.tokenBalance = pair.tokenBalance.plus(tokenAmount)
         }
         pair.tokenVolume = pair.tokenVolume.plus(tokenAmount)
@@ -232,7 +232,7 @@ export function handleSwapNFTOutPair_erc1155(event: SwapNFTOutPairERC1155): void
         collection!.save()
     } else {
         // ERC20 pair
-        if (pair.assetRecipient === event.address.toHex()) {
+        if (Address.fromString(pair.assetRecipient).equals(event.address)) {
             pair.tokenBalance = pair.tokenBalance.plus(tokenAmount)
         }
         pair.tokenVolume = pair.tokenVolume.plus(tokenAmount)
