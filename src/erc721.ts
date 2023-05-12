@@ -38,6 +38,10 @@ export function handleTransfer(event: Transfer): void {
     let toPair = Pair.load(to.toHex())
     if (toPair !== null && toPair.variant.lt(BigInt.fromI32(2))) {
         // the to address is a pair
+
+        // early return if the transfer is part of pair creation (edge case)
+        if (event.transaction.hash.equals(toPair.creationTxHash) && event.logIndex.lt(toPair.creationEventLogIndex)) return;
+
         // add NFT to pair
         let nftIds = toPair.nftIds!
 
@@ -103,6 +107,10 @@ export function handleConsecutiveTransfer(event: ConsecutiveTransfer): void {
     let toPair = Pair.load(toAddress.toHex())
     if (toPair !== null && toPair.variant.lt(BigInt.fromI32(2))) {
         // the to address is a pair
+
+        // early return if the transfer is part of pair creation (edge case)
+        if (event.transaction.hash.equals(toPair.creationTxHash) && event.logIndex.lt(toPair.creationEventLogIndex)) return;
+
         // add NFT to pair
         let nftIds = toPair.nftIds!
         let consecutiveNftIds = new Array<BigInt>(numTokenTransfers.toI32())

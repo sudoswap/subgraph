@@ -16,6 +16,9 @@ export function handleTransferSingle(event: TransferSingle): void {
 
     let toPair = Pair.load(to.toHex())
     if (toPair !== null && toPair.variant.ge(BigInt.fromI32(2)) && toPair.nftId !== null && toPair.nftId!.equals(tokenId)) {
+        // early return if the transfer is part of pair creation (edge case)
+        if (event.transaction.hash.equals(toPair.creationTxHash) && event.logIndex.lt(toPair.creationEventLogIndex)) return;
+
         toPair.numNfts = toPair.numNfts.plus(value)
         toPair.save()
     }
@@ -46,6 +49,9 @@ export function handleTransferBatch(event: TransferBatch): void {
 
     let toPair = Pair.load(to.toHex())
     if (toPair !== null && toPair.variant.ge(BigInt.fromI32(2)) && toPair.nftId !== null) {
+        // early return if the transfer is part of pair creation (edge case)
+        if (event.transaction.hash.equals(toPair.creationTxHash) && event.logIndex.lt(toPair.creationEventLogIndex)) return;
+
         for (let i = 0; i < tokenIdList.length; i++) {
             let tokenId = tokenIdList[i];
             if (tokenId.equals(toPair.nftId!)) {

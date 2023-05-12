@@ -21,6 +21,8 @@ type Pair @entity {
   tokenVolume: BigInt!
   swapNonce: BigInt!
   swaps: [Swap!]! @derivedFrom(field: "pair")
+  creationTxHash: Bytes!
+  creationEventLogIndex: BigInt!
 }
 
 type PairOwner @entity {

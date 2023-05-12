@@ -50,6 +50,8 @@ export function handleNewERC721Pair(event: NewERC721Pair): void {
   pair.tokenBalance = BigInt.zero()
   pair.tokenVolume = BigInt.zero()
   pair.swapNonce = BigInt.zero()
+  pair.creationTxHash = event.transaction.hash
+  pair.creationEventLogIndex = event.logIndex
 
   if (pair.variant.equals(BigInt.fromI32(1))) {
     let tokenAddress = LSSVMPairERC20.bind(event.params.poolAddress).token()
@@ -113,6 +115,8 @@ export function handleNewERC1155Pair(event: NewERC1155Pair): void {
   pair.tokenBalance = BigInt.zero()
   pair.tokenVolume = BigInt.zero()
   pair.swapNonce = BigInt.zero()
+  pair.creationTxHash = event.transaction.hash
+  pair.creationEventLogIndex = event.logIndex
 
   if (pair.variant.equals(BigInt.fromI32(3))) {
     let tokenAddress = LSSVMPairERC20.bind(event.params.poolAddress).token()
